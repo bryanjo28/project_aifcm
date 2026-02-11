@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Project Jeremy
 
-## Getting Started
+Landing page built with Next.js + separate Express backend for API/business logic.
 
-First, run the development server:
+## Folder structure
+
+- `app`, `components`, `public`: frontend (Next.js)
+- `backend`: API server (Express + TypeScript)
+
+## Frontend setup
+
+1. Create `.env.local` from `.env.example`
+2. Install dependencies and run:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Frontend runs on `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Backend setup
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Go to backend folder
+2. Create `.env` from `backend/.env.example`
+3. Install dependencies and run:
 
-## Learn More
+```bash
+cd backend
+npm install
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+Backend runs on `http://localhost:4000`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- `GET /api/v1/health`
+- `GET /api/v1/auth/status` (placeholder module for upcoming login/auth flow)
+- `POST /api/v1/leads`
 
-## Deploy on Vercel
+Request body for leads:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```json
+{
+  "email": "user@example.com",
+  "name": "AI Enthusiast"
+}
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Notes
+
+- EmailJS credentials are now used on backend only.
+- Frontend lead form submits to `NEXT_PUBLIC_API_URL/api/v1/leads`.
