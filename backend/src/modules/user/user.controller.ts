@@ -3,7 +3,10 @@ import * as userService from "./user.service.js";
 import { loginUserSchema, registerUserSchema } from "./user.validation.js";
 import {
   clearAuthCookie,
+  clearCsrfCookie,
   createAuthCookie,
+  createCsrfCookie,
+  createCsrfToken,
   createSessionToken,
 } from "../auth/auth.session.js";
 import { getAuthenticatedUser } from "../../middlewares/auth.middleware.js";
@@ -34,7 +37,11 @@ export const loginUserHandler = async (
     const payload = loginUserSchema.parse(req.body);
     const user = await userService.loginUser(payload);
     const sessionToken = createSessionToken({ id: user.id, role: user.role });
-    res.setHeader("Set-Cookie", createAuthCookie(sessionToken));
+    const csrfToken = createCsrfToken();
+    res.setHeader("Set-Cookie", [
+      createAuthCookie(sessionToken),
+      createCsrfCookie(csrfToken),
+    ]);
 
     res.json({
       ok: true,
@@ -46,7 +53,7 @@ export const loginUserHandler = async (
 };
 
 export const logoutUserHandler = (_req: Request, res: Response) => {
-  res.setHeader("Set-Cookie", clearAuthCookie());
+  res.setHeader("Set-Cookie", [clearAuthCookie(), clearCsrfCookie()]);
   res.json({
     ok: true,
     data: {

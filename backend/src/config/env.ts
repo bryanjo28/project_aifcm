@@ -10,6 +10,7 @@ const envSchema = z.object({
   AUTH_SECRET: z.string().min(32).default("dev-only-change-this-secret-key-32chars"),
   AUTH_COOKIE_NAME: z.string().min(1).default("auth_token"),
   AUTH_TTL_SECONDS: z.coerce.number().int().positive().default(60 * 60 * 24 * 7),
+  CSRF_COOKIE_NAME: z.string().min(1).default("csrf_token"),
   EMAILJS_SERVICE_ID: z.string().min(1),
   EMAILJS_TEMPLATE_ID: z.string().min(1),
   EMAILJS_PUBLIC_KEY: z.string().min(1),

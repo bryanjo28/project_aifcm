@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, timingSafeEqual } from "node:crypto";
 import type { Request } from "express";
 import { env } from "../../config/env.js";
 
@@ -120,6 +120,42 @@ export function clearAuthCookie(): string {
   const parts = [
     `${env.AUTH_COOKIE_NAME}=`,
     "HttpOnly",
+    "Path=/",
+    "SameSite=Lax",
+    "Max-Age=0",
+    "Expires=Thu, 01 Jan 1970 00:00:00 GMT",
+  ];
+
+  if (env.NODE_ENV === "production") {
+    parts.push("Secure");
+  }
+
+  return parts.join("; ");
+}
+
+export function createCsrfToken(): string {
+  return randomBytes(32).toString("base64url");
+}
+
+export function createCsrfCookie(token: string): string {
+  const parts = [
+    `${env.CSRF_COOKIE_NAME}=${encodeURIComponent(token)}`,
+    "Path=/",
+    "SameSite=Lax",
+    `Max-Age=${env.AUTH_TTL_SECONDS}`,
+    `Expires=${cookieDateFromNow(env.AUTH_TTL_SECONDS)}`,
+  ];
+
+  if (env.NODE_ENV === "production") {
+    parts.push("Secure");
+  }
+
+  return parts.join("; ");
+}
+
+export function clearCsrfCookie(): string {
+  const parts = [
+    `${env.CSRF_COOKIE_NAME}=`,
     "Path=/",
     "SameSite=Lax",
     "Max-Age=0",

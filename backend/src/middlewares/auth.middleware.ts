@@ -2,6 +2,7 @@ import type { NextFunction, Request, Response } from "express";
 import { UserModel } from "../modules/user/user.schema.js";
 import {
   clearAuthCookie,
+  clearCsrfCookie,
   getCookieValue,
   verifySessionToken,
 } from "../modules/auth/auth.session.js";
@@ -36,7 +37,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 
     const payload = verifySessionToken(token);
     if (!payload) {
-      res.setHeader("Set-Cookie", clearAuthCookie());
+      res.setHeader("Set-Cookie", [clearAuthCookie(), clearCsrfCookie()]);
       throw createServiceError("Unauthorized", 401);
     }
 
@@ -45,7 +46,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
       .lean();
 
     if (!user || !user.isActive) {
-      res.setHeader("Set-Cookie", clearAuthCookie());
+      res.setHeader("Set-Cookie", [clearAuthCookie(), clearCsrfCookie()]);
       throw createServiceError("Unauthorized", 401);
     }
 

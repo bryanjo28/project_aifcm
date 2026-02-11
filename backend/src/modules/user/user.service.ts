@@ -26,8 +26,7 @@ function hashPassword(password: string): string {
 function verifyPassword(password: string, storedPassword: string): boolean {
   const [salt, savedHash] = storedPassword.split(":");
   if (!salt || !savedHash) {
-    // Backward compatibility for legacy plain-text records.
-    return storedPassword === password;
+    return false;
   }
 
   const hashedBuffer = scryptSync(password, salt, 64);
