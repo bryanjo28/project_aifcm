@@ -26,7 +26,7 @@ export default function Navbar({ mode = "default" }: NavbarProps) {
         </div>
 
         <nav className={`hidden items-center gap-8 text-sm text-white/80 md:flex ${isAuthMode ? "md:hidden" : ""}`}>
-          <a className="hover:text-white" href="#hero">
+          <a className="hover:text-white" href="/aifcm">
             Personal Mentoring
           </a>
           <a className="hover:text-white" href="#produk">

@@ -70,18 +70,18 @@ export default function LoginPage() {
       <div className="pointer-events-none absolute -right-24 bottom-8 h-72 w-72 rounded-full bg-[rgba(51,195,240,0.14)] blur-[100px]" />
 
       <div className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-5xl items-center justify-center">
-        <section className="w-full max-w-md rounded-[28px] border border-[rgba(30,174,219,0.38)] bg-[rgba(8,16,34,0.76)] p-7 shadow-[0_0_34px_rgba(30,174,219,0.2)] md:p-9">
-          <p className="text-xs font-semibold tracking-[0.22em] text-white/60">
+        <section className="w-full max-w-md rounded-[28px] border border-[rgba(30,174,219,0.38)] bg-[rgba(8,16,34,0.76)] p-7 shadow-[0_0_34px_rgba(30,174,219,0.2)] md:p-9 animate-rise">
+          <p className="text-xs font-semibold tracking-[0.22em] text-white/60 animate-rise delay-1">
             MEMBER AREA
           </p>
-          <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
+          <h1 className="mt-3 text-3xl font-semibold text-white md:text-4xl animate-rise delay-2">
             Login
           </h1>
-          <p className="mt-3 text-sm leading-6 text-white/70">
+          <p className="mt-3 text-sm leading-6 text-white/70 animate-rise delay-3">
             Masuk untuk akses materi course, community, dan update terbaru.
           </p>
 
-          <form className="mt-7 space-y-4" onSubmit={handleSubmit}>
+          <form className="mt-7 space-y-4 animate-rise delay-3" onSubmit={handleSubmit}>
             <div>
               <label className="mb-2 block text-xs font-medium text-white/75">
                 Email
@@ -118,7 +118,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-white/70">
+          <p className="mt-5 text-center text-sm text-white/70 animate-rise delay-3">
             Belum punya akun?{" "}
             <Link
               href="/register"
@@ -128,7 +128,7 @@ export default function LoginPage() {
             </Link>
           </p>
 
-          <div className="mt-6 text-center">
+          <div className="mt-6 text-center animate-rise delay-3">
             <Link className="text-xs text-white/50 hover:text-white/80" href="/">
               Kembali ke landing page
             </Link>

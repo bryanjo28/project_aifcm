@@ -1,39 +1,35 @@
 import EmailLeadSection from "@/components/EmailLeadSection";
 import FooterBar from "@/components/FooterBar";
-import Hero from "@/components/Hero";
+import HeroMain from "@/components/HeroMain";
 import LimitedOffer from "@/components/LimitedOffer";
 import Navbar from "@/components/Navbar";
 import ProductSection from "@/components/ProductSection";
 import Reveal from "@/components/Reveal";
+import Value from "@/components/Value";
 import Image from "next/image";
 
 export default function Home() {
-  const valueItems = [
-    {
-      title: "AI Faceless Content Mastery Course",
-      description: "Tools, formula, dan strategi konten faceless.",
-    },
-    {
-      title: "Cuan Action Plan",
-      description: "Creator handbook untuk eksekusi harian.",
-    },
-    {
-      title: "Prompt Mastery Bundle",
-      description: "Template prompt + content calendar siap pakai.",
-    },
-    {
-      title: "Inner Creator Community",
-      description: "Akses komunitas dan stock video untuk editing.",
-    },
-  ];
-
   return (
     <div className="bg-hero">
       <Navbar />
-      <Hero />
-      <section id="about" className="-mt-8 px-6 pb-24 md:-mt-12">
+      <HeroMain />
+      <section id="about" className="px-6 pb-24">
         <div className="mx-auto w-full max-w-5xl">
-          <Reveal className="rounded-3xl border border-[rgba(30,174,219,0.35)] bg-[rgba(8,16,34,0.55)] p-6 text-center shadow-[0_0_25px_rgba(30,174,219,0.18)] md:p-8">
+          <Reveal className="mt-4 overflow-hidden rounded-3xl border border-[rgba(30,174,219,0.35)] bg-[rgba(8,16,34,0.55)] shadow-[0_0_30px_rgba(30,174,219,0.2)]">
+            <div className="w-full p-2 md:p-3">
+              <div className="relative w-full overflow-hidden rounded-2xl pt-[56.25%]">
+                <iframe
+                  className="absolute inset-0 h-full w-full"
+                  src="https://www.youtube-nocookie.com/embed/t28pPwNSqGY"
+                  title="AI Faceless Content Mastery"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </Reveal>
+          <Reveal className="mt-4 rounded-3xl border border-[rgba(30,174,219,0.35)] bg-[rgba(8,16,34,0.55)] p-6 text-center shadow-[0_0_25px_rgba(30,174,219,0.18)] md:p-8">
             <h2 className="text-xl font-semibold text-[var(--glow-light)] md:text-2xl">
               Apa si sebenarnya AI Faceless content mastery itu?
             </h2>
@@ -54,24 +50,10 @@ export default function Home() {
             </p>
           </Reveal>
 
-          <Reveal className="mt-8 overflow-hidden rounded-3xl border border-[rgba(30,174,219,0.35)] bg-[rgba(8,16,34,0.55)] shadow-[0_0_30px_rgba(30,174,219,0.2)]">
-            <div className="w-full p-2 md:p-3">
-              <div className="relative w-full overflow-hidden rounded-2xl pt-[56.25%]">
-                <iframe
-                  className="absolute inset-0 h-full w-full"
-                  src="https://www.youtube-nocookie.com/embed/t28pPwNSqGY"
-                  title="AI Faceless Content Mastery"
-                  frameBorder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-            </div>
-          </Reveal>
         </div>
       </section>
 
-      <section id="success" className="px-6 pb-28">
+      {/* <section id="success" className="px-6 pb-28">
         <div className="mx-auto w-full max-w-6xl">
           <Reveal className="text-center">
             <p className="text-sm font-semibold tracking-[0.25em] text-white/50">
@@ -149,65 +131,9 @@ export default function Home() {
             </Reveal>
           </div>
         </div>
-      </section>
+      </section> */}
 
-      <section id="value" className="px-6 pb-28">
-        <div className="mx-auto w-full max-w-5xl">
-          <Reveal className="text-center">
-            <h2 className="text-3xl font-semibold text-white md:text-4xl">
-              Apa yang Kamu Dapatkan?
-            </h2>
-            <div className="mx-auto mt-4 h-[2px] w-28 bg-gradient-to-r from-transparent via-[var(--glow-light)] to-transparent" />
-            <p className="mx-auto mt-5 max-w-2xl text-sm leading-6 text-white/65 md:text-base">
-              Investasi masa depan digital kamu dengan toolkit lengkap untuk
-              membangun sistem konten AI faceless yang konsisten dan
-              menghasilkan.
-            </p>
-          </Reveal>
-
-          <Reveal className="relative mt-10 overflow-hidden rounded-[28px] border border-[rgba(30,174,219,0.35)] bg-[rgba(5,12,26,0.78)] p-5 shadow-[0_0_35px_rgba(30,174,219,0.18)] md:p-8">
-            <div className="pointer-events-none absolute -left-16 top-8 h-44 w-44 rounded-full bg-[rgba(30,174,219,0.16)] blur-[80px]" />
-            <div className="pointer-events-none absolute -right-14 bottom-10 h-52 w-52 rounded-full bg-[rgba(51,195,240,0.14)] blur-[85px]" />
-
-            <div className="relative space-y-4">
-              {valueItems.map((item) => (
-                <div
-                  key={item.title}
-                  className="rounded-2xl border border-[rgba(30,174,219,0.6)] bg-[rgba(8,16,34,0.78)] px-5 py-4 text-center shadow-[inset_0_0_18px_rgba(30,174,219,0.08)] md:px-8"
-                >
-                  <p className="text-base font-semibold text-[var(--glow-light)] md:text-lg">
-                    {item.title}
-                  </p>
-                  <p className="mt-1 text-sm text-white/70">{item.description}</p>
-                </div>
-              ))}
-            </div>
-
-            <div className="relative mt-10 text-center">
-              <p className="text-lg font-semibold uppercase tracking-wide text-[var(--glow-light)]">
-                Value Total yang Kamu Dapat
-              </p>
-              <p className="mt-2 text-3xl font-semibold text-white md:text-4xl">
-                Rp. 6.250.000
-              </p>
-              <p className="mt-1 text-2xl text-[var(--glow-light)]">↓</p>
-              <p className="text-lg font-semibold uppercase tracking-wide text-[var(--glow-light)]">
-                Total yang Kamu Bayar Hanya
-              </p>
-              <div className="mx-auto mt-4 inline-flex rounded-md border border-[var(--glow-light)] bg-[rgba(10,20,40,0.78)] px-7 py-3 shadow-[0_0_20px_rgba(30,174,219,0.26)]">
-                <span className="text-3xl font-bold text-white">Rp. 499.000</span>
-              </div>
-            </div>
-
-            <a
-              href="#"
-              className="relative mt-8 block rounded-xl bg-gradient-to-r from-[var(--glow-blue)] to-[#2d7cff] px-6 py-4 text-center text-sm font-semibold text-white shadow-[0_15px_35px_rgba(30,174,219,0.28)] transition hover:brightness-110"
-            >
-              Dapatkan Akses Sekarang
-            </a>
-          </Reveal>
-        </div>
-      </section>
+      <Value />
 
       <section id="proof" className="px-6 pb-28">
         <div className="mx-auto w-full max-w-6xl">
@@ -273,3 +199,4 @@ export default function Home() {
     </div>
   );
 }
+

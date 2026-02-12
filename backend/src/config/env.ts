@@ -7,6 +7,7 @@ const envSchema = z.object({
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   PORT: z.coerce.number().default(4000),
   FRONTEND_ORIGIN: z.string().default("http://localhost:3000"),
+  FRONTEND_ORIGINS: z.string().optional(),
   AUTH_SECRET: z.string().min(32).default("dev-only-change-this-secret-key-32chars"),
   AUTH_COOKIE_NAME: z.string().min(1).default("auth_token"),
   AUTH_TTL_SECONDS: z.coerce.number().int().positive().default(60 * 60 * 24 * 7),
