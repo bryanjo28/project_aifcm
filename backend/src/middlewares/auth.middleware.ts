@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from "express";
-import { UserModel } from "../modules/user/user.schema.js";
+import * as userService from "../modules/user/user.service.js";
 import {
   clearAuthCookie,
   clearCsrfCookie,
@@ -41,9 +41,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
       throw createServiceError("Unauthorized", 401);
     }
 
-    const user = await UserModel.findById(payload.sub)
-      .select("name email role isActive")
-      .lean();
+    const user = await userService.getUserProfile(payload.sub);
 
     if (!user || !user.isActive) {
       res.setHeader("Set-Cookie", [clearAuthCookie(), clearCsrfCookie()]);
@@ -51,7 +49,7 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
     }
 
     res.locals.authUser = {
-      id: String(user._id),
+      id: String(user.id),
       name: user.name,
       email: user.email,
       role: user.role,

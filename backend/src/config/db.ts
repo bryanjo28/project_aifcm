@@ -1,11 +1,12 @@
-import mongoose from "mongoose";
+import { env } from "./env.js";
+import { connectMySql } from "./mysql.js";
 
 export const connectDB = async () => {
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI as string);
-    console.log(`✅ MongoDB connected: ${conn.connection.host}`);
+    await connectMySql();
+    console.log(`MySQL connected: ${env.DB_HOST}:${env.DB_PORT}/${env.DB_NAME}`);
   } catch (error) {
-    console.error("❌ MongoDB connection error:", error);
+    console.error("Database connection error:", error);
     process.exit(1);
   }
 };

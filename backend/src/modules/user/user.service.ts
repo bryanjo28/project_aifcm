@@ -1,10 +1,15 @@
 import { randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
-import { UserModel } from "./user.schema.js";
-import type { LoginUserInput, RegisterUserInput } from "./user.validation.js";
+import { getMySqlPool, type MySqlUserRow } from "../../config/mysql.js";
+import type {
+  ForgotPasswordEmailInput,
+  LoginUserInput,
+  RegisterUserInput,
+  ResetPasswordInput,
+} from "./user.validation.js";
 
 type ServiceError = Error & { statusCode?: number };
 export type PublicUser = {
-  id: string;
+  id: number;
   name: string;
   email: string;
   role: "user" | "admin";
@@ -39,34 +44,60 @@ function verifyPassword(password: string, storedPassword: string): boolean {
   return timingSafeEqual(hashedBuffer, savedHashBuffer);
 }
 
-export const createUser = async (data: RegisterUserInput) => {
-  const existingUser = await UserModel.findOne({ email: data.email });
-  if (existingUser) {
+function mapMySqlUser(user: MySqlUserRow): PublicUser {
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    isActive: Boolean(user.is_active),
+  };
+}
+
+export const createUser = async (data: RegisterUserInput): Promise<PublicUser> => {
+  const pool = getMySqlPool();
+  const [existingRows] = await pool.query<MySqlUserRow[]>(
+    "SELECT id FROM users WHERE email = ? LIMIT 1",
+    [data.email]
+  );
+
+  if (existingRows.length > 0) {
     throw createServiceError("Email sudah terdaftar.", 409);
   }
 
-  const createdUser = await UserModel.create({
-    ...data,
-    password: hashPassword(data.password),
-  });
+  const passwordHash = hashPassword(data.password);
+
+  const [result] = await pool.query(
+    `INSERT INTO users (name, email, password, role, is_active)
+     VALUES (?, ?, ?, 'user', true)`,
+    [data.name, data.email, passwordHash]
+  );
+
+  const insertResult = result as { insertId: number };
 
   return {
-    id: createdUser._id.toString(),
-    name: createdUser.name,
-    email: createdUser.email,
-    role: createdUser.role,
-    isActive: createdUser.isActive,
-  } satisfies PublicUser;
+    id: insertResult.insertId,
+    name: data.name,
+    email: data.email,
+    role: "user",
+    isActive: true,
+  };
 };
 
-export const findUserByEmail = async (email: string) => {
-  return UserModel.findOne({ email });
+export const findUserByEmail = async (email: string): Promise<MySqlUserRow | null> => {
+  const pool = getMySqlPool();
+  const [rows] = await pool.query<MySqlUserRow[]>(
+    "SELECT id, name, email, password, role, is_active FROM users WHERE email = ? LIMIT 1",
+    [email]
+  );
+
+  return rows[0] ?? null;
 };
 
-export const loginUser = async (payload: LoginUserInput) => {
-  const user = await UserModel.findOne({ email: payload.email }).select("+password");
+export const loginUser = async (payload: LoginUserInput): Promise<PublicUser> => {
+  const user = await findUserByEmail(payload.email);
 
-  if (!user) {
+  if (!user || !Boolean(user.is_active)) {
     throw createServiceError("Email atau password salah.", 401);
   }
 
@@ -75,30 +106,64 @@ export const loginUser = async (payload: LoginUserInput) => {
     throw createServiceError("Email atau password salah.", 401);
   }
 
-  return {
-    id: user._id.toString(),
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    isActive: user.isActive,
-  } satisfies PublicUser;
+  return mapMySqlUser(user);
 };
 
-export const getUserProfile = async (id: string): Promise<PublicUser | null> => {
-  const user = await UserModel.findById(id).select("name email role isActive");
+export const checkEmailForForgotPassword = async (
+  payload: ForgotPasswordEmailInput
+): Promise<{ email: string; found: boolean }> => {
+  const user = await findUserByEmail(payload.email);
+  return {
+    email: payload.email,
+    found: Boolean(user),
+  };
+};
+
+export const resetPasswordByEmail = async (
+  payload: ResetPasswordInput
+): Promise<{ email: string }> => {
+  const user = await findUserByEmail(payload.email);
+
+  if (!user || !Boolean(user.is_active)) {
+    throw createServiceError("Email tidak ditemukan.", 404);
+  }
+
+  const nextPasswordHash = hashPassword(payload.newPassword);
+  const pool = getMySqlPool();
+
+  await pool.query("UPDATE users SET password = ? WHERE id = ? LIMIT 1", [
+    nextPasswordHash,
+    user.id,
+  ]);
+
+  return { email: payload.email };
+};
+
+export const getUserProfile = async (id: string | number): Promise<PublicUser | null> => {
+  const mysqlId = Number(id);
+  if (!Number.isFinite(mysqlId)) {
+    return null;
+  }
+
+  const pool = getMySqlPool();
+  const [rows] = await pool.query<MySqlUserRow[]>(
+    "SELECT id, name, email, role, is_active FROM users WHERE id = ? LIMIT 1",
+    [mysqlId]
+  );
+
+  const user = rows[0];
   if (!user) {
     return null;
   }
 
-  return {
-    id: user._id.toString(),
-    name: user.name,
-    email: user.email,
-    role: user.role,
-    isActive: user.isActive,
-  };
+  return mapMySqlUser(user);
 };
 
-export const getAllUsers = async () => {
-  return UserModel.find().select("-password");
+export const getAllUsers = async (): Promise<PublicUser[]> => {
+  const pool = getMySqlPool();
+  const [rows] = await pool.query<MySqlUserRow[]>(
+    "SELECT id, name, email, role, is_active FROM users ORDER BY created_at DESC"
+  );
+
+  return rows.map((user) => mapMySqlUser(user));
 };

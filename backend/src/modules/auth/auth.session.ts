@@ -26,12 +26,12 @@ function cookieDateFromNow(seconds: number): string {
 }
 
 export function createSessionToken(user: {
-  id: string;
+  id: string | number;
   role: "user" | "admin";
 }): string {
   const now = Math.floor(Date.now() / 1000);
   const payload: SessionTokenPayload = {
-    sub: user.id,
+    sub: String(user.id),
     role: user.role,
     iat: now,
     exp: now + env.AUTH_TTL_SECONDS,

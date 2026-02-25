@@ -7,21 +7,19 @@ interface Props {
   };
 }
 
-export default function DashboardSidebar({ onLogout, user }: Props) {
+export default function UserSidebar({ onLogout, user }: Props) {
   return (
     <aside className="flex h-full flex-col border-b border-white/10 p-5 md:border-b-0 md:border-r md:p-6">
-      <p className="text-xs font-semibold tracking-[0.22em] text-white/45">
-        MENU
-      </p>
+      <p className="text-xs font-semibold tracking-[0.22em] text-white/45">USER MENU</p>
       <nav className="mt-4 space-y-2.5">
         <button className="w-full rounded-xl border border-[rgba(30,174,219,0.5)] bg-[rgba(30,174,219,0.15)] px-4 py-3 text-left text-sm font-semibold text-white">
-          Dashboard
+          Overview
         </button>
         <button className="w-full rounded-xl border border-white/10 bg-[rgba(8,16,34,0.55)] px-4 py-3 text-left text-sm text-white/78">
           My Course
         </button>
         <button className="w-full rounded-xl border border-white/10 bg-[rgba(8,16,34,0.55)] px-4 py-3 text-left text-sm text-white/78">
-          Notifikasi
+          Notifications
         </button>
       </nav>
 

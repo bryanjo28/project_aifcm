@@ -28,6 +28,26 @@ export const loginUserSchema = z
   })
   .strict();
 
+export const forgotPasswordEmailSchema = z
+  .object({
+    email: z
+      .string()
+      .transform((value) => normalizeWhitespace(stripControlChars(value)).toLowerCase())
+      .pipe(z.string().email().max(254)),
+  })
+  .strict();
+
+export const resetPasswordSchema = z
+  .object({
+    email: z
+      .string()
+      .transform((value) => normalizeWhitespace(stripControlChars(value)).toLowerCase())
+      .pipe(z.string().email().max(254)),
+    newPassword: z.string().min(8).max(128),
+  })
+  .strict();
+
 export type RegisterUserInput = z.infer<typeof registerUserSchema>;
 export type LoginUserInput = z.infer<typeof loginUserSchema>;
-
+export type ForgotPasswordEmailInput = z.infer<typeof forgotPasswordEmailSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

@@ -1,10 +1,12 @@
 import { Router } from "express";
 import {
+  checkForgotPasswordEmailHandler,
   createUserHandler,
   getMeHandler,
   getUsersHandler,
   loginUserHandler,
   logoutUserHandler,
+  resetForgotPasswordHandler,
 } from "./user.controller.js";
 import { authRateLimitMiddleware } from "../../middlewares/rate-limit.middleware.js";
 import { requireAdmin, requireAuth } from "../../middlewares/auth.middleware.js";
@@ -15,6 +17,8 @@ const protectedUserRoutes = Router();
 
 userRoutes.post("/register", authRateLimitMiddleware, createUserHandler);
 userRoutes.post("/login", authRateLimitMiddleware, loginUserHandler);
+userRoutes.post("/forgot-password/check-email", authRateLimitMiddleware, checkForgotPasswordEmailHandler);
+userRoutes.post("/forgot-password/reset", authRateLimitMiddleware, resetForgotPasswordHandler);
 
 protectedUserRoutes.use(requireAuth, requireCsrf);
 protectedUserRoutes.post("/logout", logoutUserHandler);

@@ -1,19 +1,21 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface Props {
   user: { name: string };
   onLogout: () => void;
 }
 
-export default function DashboardHeader({ user, onLogout }: Props) {
+export default function UserHeader({ user, onLogout }: Props) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
+      if (!ref.current?.contains(e.target as Node)) {
+        setOpen(false);
+      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -33,7 +35,7 @@ export default function DashboardHeader({ user, onLogout }: Props) {
             className="flex items-center gap-2 rounded-full border border-[rgba(30,174,219,0.5)] bg-[rgba(8,16,34,0.82)] px-4 py-2 text-sm font-semibold text-white transition hover:border-[rgba(30,174,219,0.75)]"
           >
             {user.name}
-            <span className="text-white/60">▾</span>
+            <span className="text-white/60">v</span>
           </button>
 
           {open && (

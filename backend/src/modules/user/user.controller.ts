@@ -1,6 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import * as userService from "./user.service.js";
-import { loginUserSchema, registerUserSchema } from "./user.validation.js";
+import {
+  forgotPasswordEmailSchema,
+  loginUserSchema,
+  registerUserSchema,
+  resetPasswordSchema,
+} from "./user.validation.js";
 import {
   clearAuthCookie,
   clearCsrfCookie,
@@ -97,6 +102,49 @@ export const getUsersHandler = async (
     res.json({
       ok: true,
       data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const checkForgotPasswordEmailHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const payload = forgotPasswordEmailSchema.parse(req.body);
+    const result = await userService.checkEmailForForgotPassword(payload);
+
+    if (!result.found) {
+      const error = new Error("Email tidak ditemukan.") as Error & { statusCode?: number };
+      error.statusCode = 404;
+      throw error;
+    }
+
+    res.json({
+      ok: true,
+      data: result,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const resetForgotPasswordHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const payload = resetPasswordSchema.parse(req.body);
+    const result = await userService.resetPasswordByEmail(payload);
+
+    res.json({
+      ok: true,
+      data: result,
+      message: "Password berhasil diperbarui.",
     });
   } catch (error) {
     next(error);

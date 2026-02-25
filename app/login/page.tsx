@@ -54,7 +54,7 @@ export default function LoginPage() {
       }
 
       toast.success(`Welcome back, ${result.data.name}!`);
-      router.push("/dashboard");
+      router.push(result.data.role === "admin" ? "/admin" : "/user");
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login gagal.";
       toast.error(message);
@@ -125,6 +125,14 @@ export default function LoginPage() {
               className="font-semibold text-[var(--glow-light)] hover:text-white"
             >
               Register
+            </Link>
+          </p>
+          <p className="mt-2 text-center text-sm text-white/70 animate-rise delay-3">
+            <Link
+              href="/forgot-password"
+              className="font-semibold text-[var(--glow-light)] hover:text-white"
+            >
+              Forgot Password?
             </Link>
           </p>
 
