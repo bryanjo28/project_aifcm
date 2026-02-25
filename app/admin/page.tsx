@@ -196,6 +196,7 @@ export default function AdminPage() {
             setOpenCreate(true);
           }}
           onDelete={handleDeleteProduct}
+          onOpen={(product) => router.push(`/admin/products/${product.id}`)}
         />
       );
     }
@@ -208,7 +209,7 @@ export default function AdminPage() {
         dibuat.
       </p>
     );
-  }, [activeTab, handleDeleteProduct, pagination, products, productsLoading, refetchProducts]);
+  }, [activeTab, handleDeleteProduct, pagination, products, productsLoading, refetchProducts, router]);
 
   // --- guards ---
   if (checkingAuth) {

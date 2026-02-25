@@ -20,6 +20,7 @@ export const createProductSchema = z.object({
   price: z.coerce.number().min(0).optional(),
   currency: z.string().min(1).max(10).optional(),
   status: z.enum(["draft", "active", "inactive"]).optional(),
+  categoryIds: z.array(z.coerce.number().int().positive()).optional(),
 });
 
 export const updateProductSchema = z.object({
@@ -36,8 +37,21 @@ export const updateProductSchema = z.object({
   price: z.coerce.number().min(0).optional(),
   currency: z.string().min(1).max(10).optional(),
   status: z.enum(["draft", "active", "inactive"]).optional(),
+  categoryIds: z.array(z.coerce.number().int().positive()).optional(),
 }).refine((payload) => Object.keys(payload).length > 0, {
   message: "Minimal satu field harus diisi untuk update.",
+});
+
+export const createCategorySchema = z.object({
+  name: z
+    .string()
+    .transform((value) => normalizeWhitespace(value))
+    .pipe(z.string().min(2).max(100)),
+  slug: z
+    .string()
+    .transform((value) => normalizeWhitespace(value).toLowerCase())
+    .pipe(z.string().min(2).max(100).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/))
+    .optional(),
 });
 
 export const listProductsQuerySchema = z.object({
@@ -51,3 +65,4 @@ export const listProductsQuerySchema = z.object({
 export type CreateProductInput = z.infer<typeof createProductSchema>;
 export type UpdateProductInput = z.infer<typeof updateProductSchema>;
 export type ListProductsQueryInput = z.infer<typeof listProductsQuerySchema>;
+export type CreateCategoryInput = z.infer<typeof createCategorySchema>;

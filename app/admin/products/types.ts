@@ -16,6 +16,16 @@ export interface Product {
   total_views: number | null;
   total_sales: number | null;
   total_revenue: string | null;
+  owner_id: number | null;
+  owner_name: string | null;
+  category_ids: number[];
+  category_names: string[];
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  slug: string;
 }
 
 export interface Pagination {

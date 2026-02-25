@@ -13,6 +13,7 @@ type Props = {
 
   onEdit?: (product: Product) => void;
   onDelete?: (product: Product) => void;
+  onOpen?: (product: Product) => void;
 };
 
 export default function ProductListTable({
@@ -24,7 +25,7 @@ export default function ProductListTable({
   onRefresh,
   onEdit,
   onDelete,
-
+  onOpen,
 }: Props) {
   if (loading) return <p className="text-white/60 mt-4">Loading products...</p>;
 
@@ -77,6 +78,7 @@ export default function ProductListTable({
             <thead className="text-white/50 border-b border-white/10">
               <tr>
                 <th className="py-3">Title</th>
+                <th>Category</th>
                 <th>Price</th>
                 <th>Views</th>
                 <th>Sales</th>
@@ -95,8 +97,15 @@ export default function ProductListTable({
                       : "bg-red-500/15 text-red-300 border-red-500/30";
 
                 return (
-                  <tr key={p.id} className="border-b border-white/5">
-                    <td className="py-3 font-medium">{p.title}</td>
+                  <tr
+                    key={p.id}
+                    className="cursor-pointer border-b border-white/5 transition hover:bg-white/5"
+                    onClick={() => onOpen?.(p)}
+                  >
+                    <td className="py-3 font-medium underline-offset-2 hover:underline">
+                      {p.title}
+                    </td>
+                    <td>{p.category_names?.[0] ?? "-"}</td>
                     <td>
                       {Number(p.price).toLocaleString("id-ID")} {p.currency}
                     </td>
@@ -113,7 +122,10 @@ export default function ProductListTable({
                       <div className="flex justify-end gap-2">
                         <button
                           type="button"
-                          onClick={() => onEdit?.(p)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onEdit?.(p);
+                          }}
                           className="rounded-lg border border-white/10 p-2 text-white/70 transition hover:border-[rgba(30,174,219,0.5)] hover:text-white"
                         >
                           <Pencil size={16} />
@@ -121,7 +133,10 @@ export default function ProductListTable({
 
                         <button
                           type="button"
-                          onClick={() => onDelete?.(p)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            onDelete?.(p);
+                          }}
                           className="rounded-lg border border-white/10 p-2 text-red-300 transition hover:border-red-400/50 hover:text-red-200"
                         >
                           <Trash2 size={16} />

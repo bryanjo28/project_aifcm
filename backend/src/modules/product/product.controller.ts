@@ -1,6 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 import { getAuthenticatedUser } from "../../middlewares/auth.middleware.js";
 import {
+  createCategorySchema,
   createProductSchema,
   listProductsQuerySchema,
   updateProductSchema,
@@ -38,6 +39,39 @@ export const getProductsHandler = async (
     const data = await productService.getProducts(query);
 
     res.json({
+      ok: true,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCategoriesHandler = async (
+  _req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const data = await productService.getCategories();
+    res.json({
+      ok: true,
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createCategoryHandler = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const payload = createCategorySchema.parse(req.body);
+    const data = await productService.createCategory(payload);
+    res.status(201).json({
       ok: true,
       data,
     });

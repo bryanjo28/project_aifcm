@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { getCsrfToken } from "@/lib/csrf";
-import type { Product } from "./types";
+import type { Category, Product } from "./types";
 
 type CreateProductPayload = {
   title: string;
@@ -11,12 +11,14 @@ type CreateProductPayload = {
   short_description?: string;
   price: number;
   status?: "draft" | "active" | "inactive";
+  categoryIds?: number[];
 };
 
 type CreateProductResponse =
   | { ok: true; data: { id: number } }
   | { ok: false; message?: string };
 type UpdateProductResponse = { ok: boolean; message?: string };
+type CategoriesResponse = { ok: boolean; data: Category[] };
 
 type ProductStatus = "draft" | "active" | "inactive";
 
@@ -47,6 +49,8 @@ export default function ProductFormModal({
   const [shortDescription, setShortDescription] = useState("");
   const [price, setPrice] = useState<string>("0");
   const [status, setStatus] = useState<ProductStatus>("draft");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | "">("");
   const isEditMode = Boolean(product);
 
   const generatedSlug = useMemo(() => slugify(title), [title]);
@@ -60,6 +64,7 @@ export default function ProductFormModal({
       setShortDescription(product.short_description ?? "");
       setPrice(String(product.price ?? "0"));
       setStatus(product.status ?? "draft");
+      setSelectedCategoryId(product.category_ids?.[0] ?? "");
       return;
     }
 
@@ -68,7 +73,35 @@ export default function ProductFormModal({
     setShortDescription("");
     setPrice("0");
     setStatus("draft");
+    setSelectedCategoryId("");
   }, [open, product]);
+
+  useEffect(() => {
+    if (!open) return;
+
+    const fetchCategories = async () => {
+      try {
+        const apiBaseUrl =
+          process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, "") ?? "http://localhost:4000";
+
+        const res = await fetch(`${apiBaseUrl}/api/v1/products/categories`, {
+          method: "GET",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+        });
+
+        if (!res.ok) throw new Error("Failed fetch categories");
+        const json = (await res.json()) as CategoriesResponse;
+        setCategories(json.data ?? []);
+      } catch (error) {
+        console.error(error);
+        setCategories([]);
+      }
+    };
+
+    void fetchCategories();
+  }, [open]);
 
   const resetForm = () => {
     setTitle("");
@@ -76,6 +109,7 @@ export default function ProductFormModal({
     setShortDescription("");
     setPrice("0");
     setStatus("draft");
+    setSelectedCategoryId("");
   };
 
   const handleClose = () => {
@@ -112,6 +146,7 @@ export default function ProductFormModal({
       short_description: shortDescription.trim() ? shortDescription.trim() : undefined,
       price: numericPrice,
       status,
+      categoryIds: selectedCategoryId ? [selectedCategoryId] : [],
     };
 
     setSubmitting(true);
@@ -259,6 +294,24 @@ export default function ProductFormModal({
                 </select>
               </label>
             </div>
+
+            <label className="grid gap-1">
+              <span className="text-xs text-white/60">Categories</span>
+              <select
+                value={selectedCategoryId}
+                onChange={(event) =>
+                  setSelectedCategoryId(event.target.value ? Number(event.target.value) : "")
+                }
+                className="w-full rounded-xl border border-white/10 bg-[rgba(8,16,34,0.65)] px-4 py-3 text-sm text-white outline-none focus:border-[rgba(30,174,219,0.55)]"
+              >
+                <option value="">No category</option>
+                {categories.map((category) => (
+                  <option key={category.id} value={category.id}>
+                    {category.name}
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
 
           <div className="mt-6 flex items-center justify-end gap-2">

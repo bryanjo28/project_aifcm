@@ -61,6 +61,7 @@ interface Props {
   };
   onLogout: () => void;
   children?: React.ReactNode;
+  hideTopToolbar?: boolean;
 
     // ✅ tambah ini
   primaryAction?: {
@@ -71,7 +72,14 @@ interface Props {
   
 }
 
-export default function AdminMainLayout({ activeTab, user, onLogout, children, primaryAction }: Props) {
+export default function AdminMainLayout({
+  activeTab,
+  user,
+  onLogout,
+  children,
+  primaryAction,
+  hideTopToolbar = false,
+}: Props) {
   const content = tabCopy[activeTab];
 
   return (
@@ -101,19 +109,21 @@ export default function AdminMainLayout({ activeTab, user, onLogout, children, p
             ) : null}
           </header>
 
-          <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <label className="flex w-full max-w-xl items-center gap-3 rounded-full border border-white/12 bg-[rgba(8,16,34,0.62)] px-4 py-3">
-              <span className="text-white/45">Search</span>
-              <input
-                type="text"
-                placeholder="Cari data..."
-                className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
-              />
-            </label>
-            <span className="inline-flex rounded-full border border-[rgba(30,174,219,0.35)] bg-[rgba(30,174,219,0.12)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--glow-light)]">
-              {content.badge}
-            </span>
-          </div>
+          {!hideTopToolbar ? (
+            <div className="mt-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <label className="flex w-full max-w-xl items-center gap-3 rounded-full border border-white/12 bg-[rgba(8,16,34,0.62)] px-4 py-3">
+                <span className="text-white/45">Search</span>
+                <input
+                  type="text"
+                  placeholder="Cari data..."
+                  className="w-full bg-transparent text-sm text-white outline-none placeholder:text-white/35"
+                />
+              </label>
+              <span className="inline-flex rounded-full border border-[rgba(30,174,219,0.35)] bg-[rgba(30,174,219,0.12)] px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.12em] text-[var(--glow-light)]">
+                {content.badge}
+              </span>
+            </div>
+          ) : null}
 
           <section className="mt-6 rounded-2xl border border-[rgba(30,174,219,0.3)] bg-[rgba(8,16,34,0.64)] p-4 md:p-5">
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
