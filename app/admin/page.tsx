@@ -12,6 +12,8 @@ import type { AdminTab } from "@/app/components/layout/AdminSidebar";
 import { useProducts } from "./products/useProducts";
 import ProductListTable from "./products/ProductListTable";
 import ProductFormModal from "./products/ProductFormModal";
+import { useUsers } from "./users/useUsers";
+import UserListTable from "./users/UserListTable";
 import type { Product } from "./products/types"; // ✅ kalau belum ada
 
 type AuthUser = {
@@ -29,6 +31,7 @@ export default function AdminPage() {
   const [checkingAuth, setCheckingAuth] = useState(true);
   const [user, setUser] = useState<AuthUser | null>(null);
   const [productPage, setProductPage] = useState(1);
+  const [userPage, setUserPage] = useState(1);
   const [openCreate, setOpenCreate] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
@@ -96,6 +99,7 @@ export default function AdminPage() {
   // Fetch products only after auth success and only when products tab is active.
   const shouldFetchProducts =
     !!user && !checkingAuth && activeTab === "products";
+  const shouldFetchUsers = !!user && !checkingAuth && activeTab === "users";
 
   const {
     data: products,
@@ -106,6 +110,17 @@ export default function AdminPage() {
     page: productPage,
     limit: 10,
     enabled: shouldFetchProducts,
+  });
+
+  const {
+    data: users,
+    pagination: usersPagination,
+    loading: usersLoading,
+    refetch: refetchUsers,
+  } = useUsers({
+    page: userPage,
+    limit: 10,
+    enabled: shouldFetchUsers,
   });
 
   //delete product
@@ -201,6 +216,23 @@ export default function AdminPage() {
       );
     }
 
+    if (activeTab === "users") {
+      return (
+        <UserListTable
+          data={users}
+          loading={usersLoading}
+          pagination={usersPagination}
+          onPrev={() => setUserPage((prev) => Math.max(prev - 1, 1))}
+          onNext={() =>
+            setUserPage((prev) =>
+              prev < Math.max(usersPagination.totalPages, 1) ? prev + 1 : prev,
+            )
+          }
+          onRefresh={refetchUsers}
+        />
+      );
+    }
+
     // fallback tab lain masih dummy dulu
     return (
       <p className="mt-4 text-sm text-white/65">
@@ -209,7 +241,19 @@ export default function AdminPage() {
         dibuat.
       </p>
     );
-  }, [activeTab, handleDeleteProduct, pagination, products, productsLoading, refetchProducts, router]);
+  }, [
+    activeTab,
+    handleDeleteProduct,
+    pagination,
+    products,
+    productsLoading,
+    refetchProducts,
+    router,
+    users,
+    usersLoading,
+    usersPagination,
+    refetchUsers,
+  ]);
 
   // --- guards ---
   if (checkingAuth) {

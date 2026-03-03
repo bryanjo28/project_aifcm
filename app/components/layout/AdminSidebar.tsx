@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-export type AdminTab = "overview" | "products" | "orders" | "promotions" | "sessions";
+export type AdminTab = "overview" | "products" | "orders" | "users" | "sessions";
 
 type SidebarItem = {
   key: AdminTab;

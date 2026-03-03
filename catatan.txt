@@ -1,0 +1,35 @@
+Urutan FE yang paling efisien sekarang:
+
+Di Product Detail, tampilkan course_id status.
+Buat CTA Create Course (jika course_id null).
+Buat CTA Link Existing Course (opsional awal bisa dropdown/search slug).
+Setelah course_id ada, render section Course Content:
+edit basic course (title, slug, description, publish)
+list/add/edit/delete module
+list/add/edit/delete lesson per module
+Tambahkan tombol Open Public Preview ke /public/courses/:slug.
+(Opsional tahap berikut) panel Grant Access by user_id.
+Minimal API FE yang dipanggil:
+
+GET /products/:id
+PATCH /products/:id (set course_id)
+POST /courses, PATCH /courses/:id
+GET /courses/:id
+POST/PATCH/DELETE /courses/:courseId/modules...
+POST/PATCH/DELETE /courses/:courseId/modules/:moduleId/lessons...
+Kalau mau, saya bisa bantu bikin struktur komponen FE detail page-nya (state + action map) biar langsung tinggal
+
+
+API yang dipakai dari route itu:
+
+GET /api/v1/products/:id
+PATCH /api/v1/products/:id (set course_id)
+POST /api/v1/courses (buat course baru)
+GET /api/v1/courses/:id
+PATCH /api/v1/courses/:id
+POST /api/v1/courses/:courseId/modules
+PATCH /api/v1/courses/:courseId/modules/:moduleId
+DELETE /api/v1/courses/:courseId/modules/:moduleId
+POST /api/v1/courses/:courseId/modules/:moduleId/lessons
+PATCH /api/v1/courses/:courseId/modules/:moduleId/lessons/:lessonId
+DELETE /api/v1/courses/:courseId/modules/:moduleId/lessons/:lessonId

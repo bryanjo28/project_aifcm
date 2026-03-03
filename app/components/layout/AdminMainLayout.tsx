@@ -7,7 +7,7 @@ export const adminSidebarItems: Array<{ key: AdminTab; label: string; hint: stri
   { key: "overview", label: "Overview", hint: "Ringkasan dashboard" },
   { key: "products", label: "Products", hint: "Daftar produk digital" },
   { key: "orders", label: "Orders", hint: "Riwayat transaksi" },
-  { key: "promotions", label: "Promotions", hint: "Campaign & promo" },
+  { key: "users", label: "Users", hint: "Users Management" },
   { key: "sessions", label: "Sessions", hint: "Kelas dan jadwal live" },
 ];
 
@@ -36,12 +36,12 @@ const tabCopy: Record<
     panelText: "Dummy data order terbaru dari pengguna yang checkout.",
     badge: "10 New",
   },
-  promotions: {
-    title: "Promotions",
-    subtitle: "Atur campaign untuk meningkatkan penjualan.",
-    panelTitle: "Campaign Board",
-    panelText: "Contoh status promo: draft, active, dan completed.",
-    badge: "3 Running",
+  users: {
+    title: "Users",
+    subtitle: "User Management System.",
+    panelTitle: "User Board",
+    panelText: "",
+    badge: "",
   },
   sessions: {
     title: "Sessions",
