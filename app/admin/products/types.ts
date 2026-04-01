@@ -1,5 +1,6 @@
 export interface Product {
   id: number;
+  course_id?: number | null;
   title: string;
   slug: string;
   short_description: string | null;

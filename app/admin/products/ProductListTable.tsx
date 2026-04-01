@@ -77,6 +77,7 @@ export default function ProductListTable({
           <table className="w-full text-sm text-left text-white">
             <thead className="text-white/50 border-b border-white/10">
               <tr>
+                <th className="py-3">Thumbnail</th>
                 <th className="py-3">Title</th>
                 <th>Category</th>
                 <th>Price</th>
@@ -102,6 +103,19 @@ export default function ProductListTable({
                     className="cursor-pointer border-b border-white/5 transition hover:bg-white/5"
                     onClick={() => onOpen?.(p)}
                   >
+                    <td className="py-3">
+                      {p.thumbnail_url ? (
+                        <img
+                          src={p.thumbnail_url}
+                          alt={p.title}
+                          className="h-14 w-20 rounded-lg border border-white/10 bg-white/5 object-cover"
+                        />
+                      ) : (
+                        <div className="flex h-14 w-20 items-center justify-center rounded-lg border border-dashed border-white/10 bg-white/5 text-[11px] text-white/40">
+                          No image
+                        </div>
+                      )}
+                    </td>
                     <td className="py-3 font-medium underline-offset-2 hover:underline">
                       {p.title}
                     </td>
